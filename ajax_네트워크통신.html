@@ -1,0 +1,57 @@
+<!-- 서버와 클라이언트 간의 데이터를 주고 받는 형식으로서 JSON과 페이지 리로드 없이
+웹페이지의 내용을 변경할 수 있는 Ajax는 웹에플리케이션을 구축하는데 중요한 내용이당.
+Ajax는 Asynchronous JavaScript and XML의 약자다. 한국어로는 비동기적 자바스크립트와 XML 정도로
+직역할 수 있는데 자바스크립트를 이용해서 비동기적으로 서버와 브라우저가 데이터를 주고 받는 방식을 의미한다. 
+이 때 사용하는 API가 XMLHttpRequest이다. 그렇다고 꼭 XML을 사용해서 통신해야 하는 것은 아니다. 사실 XML 보다는 JSON을 더 많이 사용한다. -->
+<!-- 크롬 개발자모드의 network 탭을 보면 네트워크 통신의 현황을 볼 수 있다. -->
+
+<!-- GET 방식의 ajax 통신 구현 -->
+<!-- time1.php라는 파일에서 현재 시간을 출력한다. (생략) -->
+<!-- demo1.html -->
+<p>time : <span id="time"></span></p>
+<input type="button" id="execute" value="execute" />
+<script>
+document.querySelector('input').addEventListener('click', function(event){
+    var xhr = new XMLHttpRequest();  // XMLHttpRequest 객체를 생성한다. 이후 객체에 대한 메소드를 실행할 수 있게 된다.
+    xhr.open('GET', './time.php');  // XMLHttpRequest 객체에 대해 open(...)을 하고, send()를 한다. 정해진 순서.
+    // 첫번째 인자 GET 또는 POST(통신 방식) / 두번째 인자: 통신하려는 서버의 리소스 위치. 
+    // 기존 form 태그를 통해 구현하면 페이지를 reload해야 / <form method="GET" action="./time1.php">
+    xhr.onreadystatechange = function(){  // 통신 과정에서의 단계마다 onreadystatechange라는 이벤트 핸들러가 호출된다. '통신이 끝남' 단계만 구현하는 경우가 많다.
+        if(xhr.readyState === 4 && xhr.status === 200){
+          // xhr.readyState: 통신이 어떤 단계에 있는지(4: 모든 통신이 끝났다) / xhr.status: 커뮤니케이션의 결과(200: 성공)
+            document.querySelector('#time').innerHTML = xhr.responseText;  // xhr.responseText: 서버에서 리턴해준 정보를 담고 있는 객체.
+            // 이를 통해 서버에서 가져온 현재시간을 페이지 리로딩 없이 가져올 수 있다.
+        }
+    }
+    xhr.send();  // xhr 객체가 open(...)에서 정의한 방식대로 통신을 시작한다.
+}); 
+</script>
+
+<!-- POST 방식의 ajax 통신 구현 -->
+<!-- demo2.html -->
+<p>time : <span id="time"></span></p>
+<select id="timezone">
+    <option value="Asia/Seoul">asia/seoul</option>
+    <option value="America/New_York">America/New_York</option>
+</select>
+<select id="format">
+    <option value="Y-m-d H:i:s">Y-m-d H:i:s</option>
+    <option value="Y-m-d">Y-m-d</option>
+</select>
+<input type="button" id="execute" value="execute" />
+<script>
+document.querySelector('input').addEventListener('click', function(event){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', './time2.php');
+    xhr.onreadystatechange = function(){
+        document.querySelector('#time').innerHTML = xhr.responseText;
+    }
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    // ㄴ> 이렇게 request의 header를 지정해야 서버 입장에서 마치 html의 form태그를 통해 데이터를 전달 받은 것 처럼 인식할 수 있다.
+    var data = '';
+    data += 'timezone='+document.getElementById('timezone').value;  // 선택한 옵션의 value 값이 삽입.
+    data += '&format='+document.getElementById('format').value;
+    // ex) timezone=Asia/Seoul&format=Y-m-d 형식. 즉 '이름=값&이름=값&..'의 형식으로 데이터를 send의 인자로 전달해야 한다.
+    xhr.send(data);  // data를 time2.php에 POST 방식으로 전달
+});
+</script> 

@@ -1,0 +1,245 @@
+<!-- Node 관계 API -->
+<body id="start">
+    <ul>
+        <li><a href="./532">html</a></li> 
+        <li><a href="./533">css</a></li>
+        <li><a href="./534">JavaScript</a>
+            <ul>
+                <li><a href="./535">JavaScript Core</a></li>
+                <li><a href="./536">DOM</a></li>
+                <li><a href="./537">BOM</a></li>
+            </ul>
+        </li>
+    </ul>
+<script>
+var s = document.getElementById('start');
+console.log(s.firstChild);  // ul이 출력될 것 같지만 #text가 출력된다. <body>와 <ul> 사이에 줄바꿈, 스페이스 등의 문자열이 존재하기 때문이다. ul, li, a 등은 엘리먼트라는 노드타입을 가지고 있는 정보.. 'html' 등의 문자열은 text라는 노드타입을 가진 정보. 
+var ul = s.firstChild.nextSibling  // text의 부모에는 node가 있고, node와 마찬가지로 text도 node와 동일한 메소드를 지닌다. 다음에 있는 같은 계열의 형제자매 엘리먼트를 지정. 반대는 previousSibling.
+console.log(2, ul); // ul
+console.log(3, ul.nextSibling); // #text (공백문자)
+console.log(4, ul.nextSibling.nextSibling); // script
+console.log(5, ul.childNodes); // childNodes: 자식 엘리먼트들을 조회 -> text, li, text, li, text, li, text
+console.log(6, ul.childNodes[1]); // li(html)
+console.log(7, ul.parentNode); // body
+</script>
+</body>
+
+<!-- 노드 종류 API -->
+<script>
+//노드의 종류에 따라서 정해진 상수가 존재한다. 아래는 모든 노드의 종류와 종류에 따른 값을 출력하는 예제다.
+for(var name in Node){
+  console.log(name, Node[name]);
+}
+</script>
+
+<!-- 재귀함수 ...;; -->
+<!DOCTYPE html>
+<html>
+<body id="start">
+<ul>
+    <li><a href="./532">html</a></li> 
+    <li><a href="./533">css</a></li>
+    <li><a href="./534">JavaScript</a>
+        <ul>
+            <li><a href="./535">JavaScript Core</a></li>
+            <li><a href="./536">DOM</a></li>
+            <li><a href="./537">BOM</a></li>
+        </ul>
+    </li>
+</ul>
+<script>
+function traverse(target, callback){
+    if(target.nodeType === 1){
+        //if(target.nodeName === 'A')
+        callback(target);
+        var c = target.childNodes;
+        for(var i=0; i<c.length; i++){
+            traverse(c[i], callback);       
+        }   
+    }
+}
+traverse(document.getElementById('start'), function(elem){
+    console.log(elem);
+});
+</script>
+</body>
+</html>
+
+<!-- 노드 변경 API: 추가 -->
+<ul id="target">
+    <li>HTML</li>
+    <li>CSS</li>
+</ul>
+<input type="button" onclick="callAppendChild();" value="appendChild()" />
+<input type="button" onclick="callInsertBefore();" value="insertBefore()" />
+<script>
+/*
+노드의 추가와 관련된 API들은 아래와 같다.
+* appendChild(child)
+: 노드의 마지막 자식으로 주어진 엘리먼트 추가
+* insertBefore(newElement, referenceElement)
+: appendChild와 동작방법은 같으나 두번째 인자로 엘리먼트를 전달 했을 때 이것 앞에 엘리먼트가 추가된다.
+
+노드를 추가하기 위해서는 추가할 엘리먼트를 생성해야 하는데 이것은 document 객체의 기능이다. 아래 API는 노드를 생성하는 API이다.
+* document.createElement(tagname)
+: 엘리먼트 노드를 추가한다.
+* document.createTextNode(data)
+: 텍스트 노드를 추가한다. 
+*/
+function callAppendChild(){
+    var target = document.getElementById('target');
+    var li = document.createElement('li');  // li 엘리먼트 객체를 생성, 변수에 담는다. -> <li> <li>
+    var text = document.createTextNode('JavaScript');  // 텍스트 노드 생성 -> JavaScript
+    li.appendChild(text);  // li라는 노드객체의 자식으로 할 노드를 인자로 전달 -> <li>JavaScript</li>
+    target.appendChild(li);  // <li>JavaScript</li>이 target이라는 노드객체의 맨 끝에 추가됨.
+}
+
+function callInsertBefore(){  // 맨 끝이 아니라 특정 순서에 넣고 싶을 때: insertBefore
+    var target = document.getElementById('target');
+    var li = document.createElement('li');
+    var text = document.createTextNode('jQuery');
+    li.appendChild(text);
+    target.insertBefore(li, target.firstChild);  // target.firstChild: <ul>과 <li>사이의 공백(text). insertBefore로 인해 HTML 앞 순서에 위치
+}
+</script>
+
+<!-- 노드 변경 API: 제거 -->
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li id="target">JavaScript</li>
+</ul>
+<input type="button" onclick="callRemoveChild();" value="removeChild()" />
+<script>
+    function callRemoveChild(){
+        var target = document.getElementById('target');
+        target.parentNode.removeChild(target);  // parentNode를 통해 부모 노드 객체(<ul>~</ul>) 지정, removeChild의 인자로 제거할 노드의 참조값을 전달
+    }
+</script>
+
+<!-- 노드 변경 API: 바꾸기 -->
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li id="target">JavaScript</li>
+</ul>
+<input type="button" onclick="callReplaceChild();" value="replaceChild()" />
+<script>
+    function callReplaceChild(){
+        var a = document.createElement('a');
+        a.setAttribute('href', 'http://opentutorials.org/module/904/6701');
+        a.appendChild(document.createTextNode('Web browser JavaScript'));
+ 
+        var target = document.getElementById('target');
+        target.replaceChild(a,target.firstChild);  // 첫번째 인자:교체되어 들어갈 대상 / 두번째 인자: 교체 대상(JavaScript)
+    }
+</script>
+
+<!-- jQuery 노드 변경(manipulation) API: 추가 -->
+
+<!-- before는 여기에 추가 -->
+<div class="target">
+    <!-- prepend는 여기에 추가 -->
+    content1
+    <!-- append는 여기에 추가 -->
+</div>
+<!-- after는 여기에 추가 -->
+<!-- before는 여기에 추가 -->
+<div class="target">
+    <!-- prepend는 여기에 추가 -->
+    content2
+    <!-- append는 여기에 추가 -->
+</div>
+<!-- after는 여기에 추가 -->
+ 
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $('.target').before('<div>before</div>');
+    $('.target').after('<div>after</div>');
+    $('.target').prepend('<div>prepend</div>');
+    $('.target').append('<div>append</div>');
+</script>
+
+<!-- jQuery 노드 변경(manipulation) API: 제거 -->
+<div class="target" id="target1">
+    target 1
+</div>
+ 
+<div class="target" id="target2">
+    target 2
+</div>
+ 
+<input type="button" value="remove target 1" id="btn1" />
+<input type="button" value="empty target 2" id="btn2" />
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+  // remove는 선택된 엘리먼트를 제거하는 것이고
+  // empty는 선택된 엘리먼트의 텍스트 노드를 제거하는 것이다.
+    $('#btn1').click(function(){
+        $('#target1').remove();  // <div class..> ~ </div> 전체가 삭제
+    })
+    $('#btn2').click(function(){
+        $('#target2').empty();  // target 2만 삭제. <div..> ~ </div>는 그대로 유지
+    })
+</script>
+
+<!-- jQuery 노드 변경(manipulation) API: 교체 -->
+<div class="target" id="target1">
+    target 1
+</div>
+ 
+<div class="target" id="target2">
+    target 2
+</div>
+ 
+<input type="button" value="replaceAll target 1" id="btn1" />
+<input type="button" value="replaceWith target 2" id="btn2" />
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+  // replaceWith가 제어 대상을 먼저 지정하는 것에 반해서 replaceAll은 제어 대상을 인자로 전달한다
+    $('#btn1').click(function(){
+        $('<div>replaceAll</div>').replaceAll('#target1');  // 이거로 <- 이거를 교체한다
+    })
+    $('#btn2').click(function(){
+        $('#target2').replaceWith('<div>replaceWith</div>');  // 이거를 -> 이거로 교체한다.
+    })
+</script>
+
+<!-- jQuery 노드 변경(manipulation) API: 교체 -->
+<div class="target" id="target1">
+    target 1
+</div>
+ 
+<div class="target" id="target2">
+    target 2
+</div>
+ 
+<div id="source">source</div>
+ 
+<input type="button" value="clone replaceAll target 1" id="btn1" />
+<input type="button" value="clone replaceWith target 2" id="btn2" />
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $('#btn1').click(function(){
+        $('#source').clone().replaceAll('#target1');
+    })
+    $('#btn2').click(function(){
+        $('#target2').replaceWith($('#source').clone());
+    })
+</script>
+
+<!-- jQuery 노드 변경(manipulation) API: 교체 -->
+<div class="target" id="target1">
+    target 1
+</div>
+ 
+<div id="source">source</div>
+ 
+<input type="button" value="append source to target 1" id="btn1" />
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+  // dom manipulation API의 인자로 특정 노드를 선택하면 이동의 효과가 난다.
+    $('#btn1').click(function(){
+        $('#target1').append($('#source'));
+    })
+</script>

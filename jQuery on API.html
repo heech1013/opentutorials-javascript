@@ -1,0 +1,77 @@
+<!-- on은 jQuery에서 가장 중요한 이벤트 API이다. on의 기본적인 문법은 아래와 같다. -->
+.on( events [, selector ] [, data ], handler(eventObject) )
+<!--
+* event : 등록하고자 하는 이벤트 타입을 지정한다. (예: "click")
+* selector : 이벤트가 설치된 엘리먼트의 하위 엘리먼트를 이벤트 대상으로 필터링함
+* data : 이벤트가 실행될 때 핸들러로 전달될 데이터를 설정함
+* handler : 이벤트 핸들러 함수 -->
+
+<!-- selecter -->
+<!-- selecter 파라미터는 이벤트 대상을 필터링한다. -->
+<ul>
+    <li><a href="#">HTML</a></li>
+    <li><a href="#">CSS</a></li>
+    <li><a href="#">JavaScript</a></li>
+</ul>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $('ul').on('click','a, li', function(event){  // ul 엘리먼트의 하위 엘리먼트 중에  a, li 엘리먼트들에 대해서만 이벤트가 발생한다. 주의 할 것은 ul 엘리먼트는 이벤트가 발생하지 않는다는 점이다. 이것은 jQuery에서 이벤트 버블링을 구현하는 방법이기도 하다.
+        console.log(this.tagName);  // this는 사용자가 a 태크를 클릭하면 a, li를 클릭하면 li가 된다.
+    })
+</script>
+
+<!-- late binding -->
+<!-- jQuery는 존재하지 않는 엘리먼트에도 이벤트를 등록할 수 있는 놀라운 기능을 제공한다. -->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $('body').on('click','a, li', function(event){  // 아직 정의되지 않은 태그들에 대해 이벤트를 정의하고 있다. 하지만 이미 존재하는 <body>태그에 대해 이벤트를 설정하면, late binding에 의해 이후 정의되는 태그들에 대해서도 이벤트를 설정할 수 있게 된다.
+        console.log(this.tagName);
+    })
+</script>
+<ul>
+    <li><a href="#">HTML</a></li>
+    <li><a href="#">CSS</a></li>
+    <li><a href="#">JavaScript</a></li>
+</ul>
+
+<!-- 다중 binding(가칭) -->
+<!-- 하나의 엘리먼트에 여러개의 이벤트 타입을 동시에 등록하는 방법 -->
+<input type="text" id="target" />
+<p id="status"></p>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $('#target').on('focus blur', function(e){  // focus와 blur라는 이벤트 타입 사이에 공백을 둔다. 두 개의 이벤트 타입에 하나의 이벤트 핸들러를 지정하는 것.
+        $('#status').html(e.type);
+    })
+    // 밑은 위와 동작 결과가 같은 코드.
+    var handler = function (e) {
+      $('#status').html(e.type);
+    }
+    $('#target').on(
+      {
+        'focus' : handler,
+        'blur' : handler
+      }
+    )
+    // 밑은 위와 동작 결과가 같은 코드.
+    var handler = function (e) {
+      $('#status').html(e.type);
+    }
+    $('#target').on('focus', handler).on('blur', handler);  // chaining을 지원. 이를 이용한 이벤트 다중 등록
+</script>
+
+<!-- 이벤트 제거: off -->
+<input type="text" id="target"></textarea>
+<input id="remove"  type="button" value="remove" />
+<p id="status"></p>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+  var handler = function(e){
+    $('#status').text(e.type+Math.random());
+  };
+  $('#target').on('focus blur', handler)
+  $('#remove').on('click' , function(e){  // remove 버튼을 누르면
+    $('#target').off('focus blur', handler);  // focus와 blur 이벤트를 삭제한다. 두번째 인자는 handler 이벤트 핸들러를 가지는 이벤트만을 지정.(여러개의 focus 중 특정 focus를 지정할 때 등)
+    console.log(32);
+  })
+</script>

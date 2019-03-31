@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<a id="anchor" href="http://opentutorials.org">opentutorials</a>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li id="active">JavaScript</li>
+</ul>
+<input type="button" id="button" value="button" />
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous">  // jQuery using CDN(minified)
+
+var li = document.getElementById('active');
+console.log(li.constructor.name);  // HTMLLIElement 반환. HTMLElement라는 객체 프로퍼티를 통해 HTML 태그들을 자바스크립트로 제어할 수 있다.
+
+var lis = document.getElementsByTagName('li');
+console.log(lis.constructor.name);  // HTMLCollection(유사배열) 반환. HTMLCollection이라는 객체 프로퍼티를 통해 HTML 태그들을 자바스크립트로 제어할 수 있다.
+
+var target = document.getElementById('active');
+console.log(target.constructor.name);  // HTMLLIElement
+
+var target = document.getElementById('anchor');
+console.log(target.constructor.name);  // HTMLAnchorElement
+
+var target = document.getElementById('button');
+console.log(target.constructor.name);  // HTMLInputElement
+
+/* HTMLLIElement, HTMLAnchorElement, HTMLInputElement 등은 HTMLElement라는 부모객체의 자식객체, 즉 상속을 받은 상태이다.
+공통적인 속성이 있고, 태그의 속성에 따라 각각 다른 속성들이 있다. DOM Tree 참고. */
+
+</script>
+</body>
+</html>

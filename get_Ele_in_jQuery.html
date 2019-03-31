@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <ul id='demo'>
+    <li class="active">HTML</li>
+    <li id="active">CSS</li>
+    <li class="active">JavaScript</li>
+  </ul>
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous">  // jQuery using CDN(minified)
+  jQuery( document ).ready(function( $ ) {
+    /* $() : jQuery의 함수(jQuery function).
+    이 함수의 인자에 무엇을 전달하느냐에 따라 여러가지 기능을 가진다.
+    이 함수의 인자로 CSS 선택자를 전달하면 'jQuery 객체'를 return한다.
+    이 객체는 선택자에 해당하는 엘리먼트를 제어하는 다양한 메소드를 가지고 있다. */
+    $('li').css('color', 'red');  // 태그 명이 li인 엘리먼트들을 객체로 반환, css라는 메소드를 통해 css의 color를 red로 바꾼다.
+    $('.active').css('color', 'red');  // class명이 active인 엘리먼트들을 객체로 반환.
+    $('#active').css('color', 'red').css('textDecoration', 'underline');  // id값이 activec인 엘리먼트들을 객체로 반환. / chaining: 연속적으로 메소드를 호출하는 것
+});
+</script>
+</body>
+</html>

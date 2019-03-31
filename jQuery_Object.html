@@ -1,0 +1,50 @@
+<!-- 제이쿼리 객체(jQuery Object)
+  : 제이쿼리 함수(jQuery function)를 통해 선택한 엘리먼트들에 대한 정보를 가지고 있으면서
+  동시에 그 엘리먼트들을 대상으로 어떠한 작업을 할 수 있는 메소드, 프로퍼티를 가지고 있는 객체-->
+
+<html>
+<body>
+<ul>
+    <li>html</li>
+    <li>css</li>
+    <li id="target">JavaScript</li>
+</ul>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+
+console.log($('li').length);  // 3
+console.log($('li')[0]);  // <li>html</li>
+var li = $('li');
+li.css('color', 'red');  // jQuery 객체에 대한 메소드 실행. 가능.
+for(var i = 0; i < li.length; i++){
+    console.log(li[i]);  // <li>html</li> <li>css ...
+    console.log(li[i].constructor);  // li 각각의 요소에 담겨있는 객체의 정보. 출력: function HTMLLIElement() { ... }. 즉 jQuery객체가 아닌 DOM 객체. 따라서 .css 등의 메소드를 가지고 있지 않다.
+    console.log(li[i].css('color', 'red'));  // DOM 객체에 대한 jQuery객체 메소드 실행. 구문 오류.
+    console.log( $( li[i] ).css('color', 'red') );  // 이렇게 DOM 객체를 jQuery함수로 한 번 더 감싸주면 jQuery객체를 반환, 메소드를 사용할 수 있게 된다.
+}
+
+var t = document.getElementById('target');  // t는 <li id="target">JavaScript</li>
+console.log(t.constructor);  // function HTMLLIElement() {...}. DOM 객체이므로 jQuery메소드 실헹 불가
+var li = $(t);  // jQuery함수로 감싸주면 jQuery객체가 반환. [<li id="target">JavaScript</li>]
+t.css('color', 'red');  // jQuery 객체 메소드 실행이 가능해짐
+
+</script>
+</body>
+</html>
+
+<!-- ----------.map()을 활용한 jQuery Object 조회--------- -->
+
+<ul>
+  <li>html</li>
+  <li>css</li>
+  <li>JavaScript</li>
+</ul>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+  var li = $('li');
+  // map은 jQuery 객체의 엘리먼트를 하나씩 순회한다. 이 때 첫번째 인자로 전달된 함수가 호출되는데 첫번째 인자로 엘리먼트의 인덱스(예를 들면 0), 두번째 인자로 엘리먼트 객체(DOM, 예를 들면 function HTMLLIElement() {...})이 전달된다.
+  li.map(function(index, elem){
+    console.log(index, elem);
+    $(elem).css('color', 'red');  // DOM을 대상으로 메소드를 실행할 수 없기 때문에 jQuery함수로 감싸준다.
+  })
+</script>

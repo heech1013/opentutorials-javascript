@@ -1,0 +1,130 @@
+<!-- ---------------getElementsByTagName-------------------------- -->
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+<script>
+  var lis = document.getElementsByTagName('li');  // 'li'라는 태그명을 가진 객체를 찾아 NodeList라는 유사배열에 담아 반환한다. NodeList는 배열은 아니지만 length와 배열접근연산자를 사용해서 엘리먼트를 조회할 수 있다.
+  for(var i=0; i < lis.length; i++) {
+    lis[i].style.color = 'red';
+  }
+</script>
+</body>
+</html>
+
+<!-- -------------getElementsByTagName 응용------------------------- -->
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+<ol>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ol>
+<script>
+  var ul = document.getElementsByTagName('ul')[0];  // 여러개의 li 태그 중 조회의 대상을 좁히려면 다음과 같이 특정 객체를 지정한 후 진행하면 된다.
+  var lis = ul.getElementsByTagName('li');
+  for(var i=0; i < lis.length; i++) {
+    lis[i].style.color = 'red';
+  }
+</script>
+</body>
+</html>
+
+<!-- -----------getElementsByClassName-------------------------------- -->
+
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+  <li>HTML</li>
+  <li class="active">CSS</li>
+  <li class="active">JavaScript</li>
+</ul>
+<script>
+  var lis = document.getElementsByClassName('active');  // 'active'라는 이름을 가진 class를 찾아 대상을 지정한다.
+  for(var i = 0; i < lis.length; i++) {
+    lis[i].style.color = 'red';
+  }
+</script>
+</body>
+</html>
+
+<!-- ---------------getElementById------------------------------ -->
+
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+  <li>HTML</li>
+  <li id="active">CSS</li>
+  <li>JavaScript</li>
+</ul>
+<script>
+  var lis = document.getElementById('active');  // 'active'라는 이름을 가진 id값을 기준으로 객체를 조회한다. 성능면에서 가장 우수하다. id는 유일무이한 단 하나의 객체만을 나타내므로, 하나의 객체만을 조회한다.
+  li.style.color = 'red';  // 배열이 아니므로 바로 접근 가능
+</script>
+</body>
+</html>
+
+<!-- --------------querySelector------------------------- -->
+
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+<ol>
+  <li>HTML</li>
+  <li class="active">CSS</li>
+  <li>JavaScript</li>
+</ol>
+ 
+<script>
+  var li = document.querySelector('li');  // CSS 선택자 중 li라는 태그를 가진 태그를 선택한다. 하나의 element만을 return. 즉 <li>HTML</li>만 선택
+  li.style.color='red';
+  var li = document.querySelector('.active');  // class="active" 인 element를 선택
+  li.style.color='blue';
+</script>
+</body>
+</html>
+
+<!-- --------------querySelectorAll------------------------- -->
+
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+</ul>
+<ol>
+    <li>HTML</li>
+    <li class="active">CSS</li>
+    <li>JavaScript</li>
+</ol>
+ 
+<script>
+    var lis = document.querySelectorAll('li');  // li를 가진 모든 객체를 조회한다.
+    for(var name in lis){
+        lis[name].style.color = 'blue';
+    }
+</script>
+</body>
+</html>
+
+<!-- getElementsByTagName only selects elements based on their tag name. querySelectorAll can use any selector which gives it much more flexibility and power, but it is newer and so has weaker browser support.
+getElementsByTagName is probably faster, since it is simpler, but that is unlikely to have a noticeable impact on anything you do with it. -->
